@@ -49,16 +49,16 @@ void simple_analysis()
   // Create histograms 
 
   //1D histograms
-  TH1F *h_ene_all = new TH1F("h_showers", "All events", 100, 0, 10);
-  TH1F *h_ene_cuts = new TH1F("h_ene_cuts", "Selcted events", 100, 0, 10);
+  TH1F h_ene_all("h_showers", "All events", 100, 0, 10);
+  TH1F h_ene_cuts("h_ene_cuts", "Selected events", 100, 0, 10);
 
   //2D histograms
-  TH2F *h2d_vtx_yz  = new TH2F("h2d_vtx_xy", "", 100, -150, 150, 100, -100, 1100);
+  TH2F h2d_vtx_yz("h2d_vtx_xy", "", 100, -150, 150, 100, -100, 1100);
 
-  TFile *inFile = TFile::Open("/Users/anavrera/MicroBooNE/data/prodgenie_bnb_nu_uboone_overlay_mcc9.1_v08_00_00_26_filter_run3_reco2_G_reco2.root");
+  TFile inFile("/Users/anavrera/MicroBooNE/data/prodgenie_bnb_nu_uboone_overlay_mcc9.1_v08_00_00_26_filter_run3_reco2_G_reco2.root");
   
   // Create a TTreeReader for the tree, for instance by passing the
-  TTreeReader myReader("nuselection/NeutrinoSelectionFilter", inFile);
+  TTreeReader myReader("nuselection/NeutrinoSelectionFilter", &inFile);
 
   //Access the values in the tree
   //Be careful, the type defines for the TTreeValue has to match the type of the variable in the TTree
@@ -95,8 +95,8 @@ void simple_analysis()
   while (myReader.Next()) { //Loop on the events of the tree
 
     // Access the tree variables as if they were iterators:  (note the '*' in front of them):
-    h_ene_all->Fill( *nu_e );
-    h2d_vtx_yz->Fill( *reco_vtx_y, *reco_vtx_z );
+    h_ene_all.Fill(*nu_e);
+    h2d_vtx_yz.Fill(*reco_vtx_y, *reco_vtx_z);
 
     if(*nu_pdg == 12 || *nu_pdg == -12) ++all_nues;
 
@@ -106,7 +106,7 @@ void simple_analysis()
     if(!in_fv( *reco_vtx_x, *reco_vtx_x, *reco_vtx_z )) continue; // request the vertex to be in fiducial volume
 
     //Fill the histograms with events that pass the cuts
-    h_ene_cuts->Fill(*nu_e);
+    h_ene_cuts.Fill(*nu_e);
     ++passed;
 
     //Request the neutrino PDG code the one for nue/nuebar to count nues 
@@ -128,19 +128,19 @@ void simple_analysis()
 
   //Plot the histograms
 
-  TCanvas *c_nu_ene = new TCanvas();
-  h_ene_all->Draw();
+  TCanvas c_nu_ene;
+  h_ene_all.Draw();
   
-  h_ene_cuts->SetLineColor(2);
-  h_ene_cuts->Draw("same");
-  c_nu_ene->SaveAs("neutrino_energy.eps");
+  h_ene_cuts.SetLineColor(2);
+  h_ene_cuts.Draw("same");
+  c_nu_ene.SaveAs("neutrino_energy.eps");
 
-  TCanvas *c2d_vtx = new TCanvas();
-  h2d_vtx_yz->GetXaxis()->SetTitle("Vertex y position [cm]");
-  h2d_vtx_yz->GetYaxis()->SetTitle("Vertex z position [cm]");
+  TCanvas c2d_vtx;
+  h2d_vtx_yz.GetXaxis()->SetTitle("Vertex y position [cm]");
+  h2d_vtx_yz.GetYaxis()->SetTitle("Vertex z position [cm]");
 
-  h2d_vtx_yz->Draw("colz");
+  h2d_vtx_yz.Draw("colz");
 
-  c2d_vtx->SaveAs("vertex_position_yz.eps");
+  c2d_vtx.SaveAs("vertex_position_yz.eps");
   
 }
