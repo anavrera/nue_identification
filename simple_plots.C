@@ -3,6 +3,14 @@
 // Run with command: root -b -l simple_plots.C
 ///////////////////////////////////////////// 
 
+#include "TROOT.h"
+#include "TStyle.h"
+#include "TFile.h"
+#include "TTree.h"
+#include "TH1F.h"
+#include "TCanvas.h"
+
+
 void simple_plots(){
 
   gStyle->SetOptStat(0);

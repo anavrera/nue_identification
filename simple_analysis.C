@@ -7,7 +7,6 @@
 
 //C++ includes
 #include <iostream>
-#include <vector>
 
 //ROOT includes
 #include "TROOT.h"
@@ -19,8 +18,9 @@
 #include "TTreeReader.h"
 #include "TTreeReaderValue.h"
 
+using std::cout;
+using std::endl;
 
-using namespace std;
 
 bool in_fv(float vtx_x, float vtx_y, float vtx_z)
 {
